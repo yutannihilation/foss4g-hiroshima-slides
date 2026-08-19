@@ -1,9 +1,9 @@
 ---
-title: ここにタイトルを書きます。
+title: "SedonaDB: Why Yet Another Geospatial Database Engine?"
 theme: default
 background: /background.png
 fonts:
-  sans: Nebula Sans, Noto Sans JP
+  sans: Nebula Sans
   mono: Fira Code
   weights: 600,900
   # Nebula Sans is self-hosted from ./fonts, so don't fetch it from Google Fonts
@@ -15,32 +15,14 @@ favicon: /favicon.ico
 #  ogImage: https://cover.sli.dev
 ---
 
-# ここにも<br/>タイトルを<br/>書きます。
+# SedonaDB:<br>Why Yet Another<br>Geospatial Database Engine?
 
-20XX/MM/DD
+2026/09/01
 
-@yutannihilation
-
----
-layout: image-right
-image: "/icon.jpg"
-backgroundSize: 70%
----
-
-# ドーモ！
-
-## 名前:
-
-湯谷啓明 (@yutannihilation)
-
-## 自己紹介:
-
-- 自己紹介をここに書きます。
+Hiroaki Yutani
 
 ---
 
-# ここから内容
+# What is SedonaDB?
 
-1. あああ
-1. いいい
-1. ううう
+
