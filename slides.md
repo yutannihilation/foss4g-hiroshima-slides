@@ -25,4 +25,17 @@ Hiroaki Yutani
 
 # What is SedonaDB?
 
+---
+
+# DuckDB
+
+|   | Vector | Raster | w/o server |
+|:--|:------:|:------:|:----------:|
+| PostGIS | ✅ | ✅  |   |
+| DuckDB | ✅ |   | ✅  |
+| SedonaDB | ✅ | ✅  | ✅  |
+
+---
+
+# a
 
