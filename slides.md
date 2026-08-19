@@ -3,9 +3,11 @@ title: ここにタイトルを書きます。
 theme: default
 background: /background.png
 fonts:
-  sans: Noto Sans JP
+  sans: Nebula Sans, Noto Sans JP
   mono: Fira Code
   weights: 600,900
+  # Nebula Sans is self-hosted from ./fonts, so don't fetch it from Google Fonts
+  local: Nebula Sans
 class: text-center
 mdc: true
 favicon: /favicon.ico

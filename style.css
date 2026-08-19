@@ -1,3 +1,20 @@
+/* Nebula Sans (SIL OFL 1.1) — see fonts/OFL.txt */
+@font-face {
+    font-family: "Nebula Sans";
+    src: url("./fonts/NebulaSans-Semibold.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Nebula Sans";
+    src: url("./fonts/NebulaSans-Black.woff2") format("woff2");
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 .slidev-layout {
     @apply px-14 py-10 text-4xl leading-tight;
     font-weight: 600;
