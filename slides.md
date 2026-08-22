@@ -108,7 +108,9 @@ Hiroaki Yutani
 | DuckDB | ✅ | ⚠️  | ✅  |
 | SedonaDB | ✅ | ✅  | ✅  |
 
-⚠️: community extension
+<small class="block mt-2 text-left text-xl text-gray-500 font-semibold">
+⚠️ Community extension
+</small>
 
 ---
 
