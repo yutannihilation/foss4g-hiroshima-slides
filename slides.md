@@ -162,3 +162,42 @@ clicks: 1
     AND bbox.ymin BETWEEN 40 AND 41         -- because they are point geometries.
 ) TO 'nyc_pizza.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
 ```
+
+---
+
+# Equivalent SQL in PostGIS
+
+```sql
+-- filter by bbox
+AND geometry &&
+  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+-- check intersection precisely
+AND ST_Intersects(
+  geometry,
+  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+)
+```
+
+---
+
+# Good news
+
+- As of DuckDB v1.5, `&&` does filter pruning!
+  - `&&` is an alias to `ST_Intersects_Extent()`
+- So, we can use `&&` instead of the conditions on `bbox` column, in theory...?
+
+
+---
+
+# Bad news
+
+- If we change the SQL to `&&`, it takes forever...
+
+<img src="/src/screenshot3.png" class="mx-auto mt-6 w-4/5 max-h-72 object-contain" />
+
+---
+
+# Why?
+
+- Overture Maps' GeoParquet does not provide row-group statistics on `GEOMETRY` column yet.
+- 
