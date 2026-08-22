@@ -47,56 +47,75 @@ Hiroaki Yutani
 
 # 🐘PostGIS
 
-<img src="/src/postgis-logo-horizontal.png" class="absolute top-8 right-8 h-30 object-contain" />
+<img src="/src/postgis-logo-horizontal.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
-- PostgreSQL で GIS データを扱える<br/>ようにする拡張
-- 関数が豊富
-  - PostGIS の挙動がデファクトスタンダード
-- ベクターもラスターも扱える
+- A PostgreSQL extension
+- Versatile spatial functions!
+  - This is the de facto standard...
+- Supports both vector and raster data
+- Requires PostgreSQL server setup
 
 ---
 
 # 🦆DuckDB
 
-<img src="/src/DuckDB_icon-lightmode.svg" class="absolute top-8 right-8 h-30 object-contain" />
+<img src="/src/DuckDB_icon-lightmode.svg" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
-- ポータビリティに優れている
-  - シングルバイナリ
-  - ブラウザでも動く
-  - 古いマシンでも動く
-  - もちろん Python や R からも使える
-- GIS 専用ではないが `spatial` 拡張がある
-- v1.5 で`GEOMETRY`型が本体に入った
+- Highly portable
+  - Single binary
+  - Runs everywhere (older machines, web browsers, Python, R, etc)
+- `spatial` extension provide spatial functions
+- No native raster support (but a community extension is available)
+
+---
+
+# 🦆What’s New in DuckDB
+
+<img src="/src/DuckDB_icon-lightmode.svg" class="float-right -mt-16 ml-8 h-30 object-contain" />
+
+- Native `GEOMETRY` type (v1.5🎉)
+  - We'll talk about this later!
+- "DuckDB as a server" (v2.0, soon-ish)
+  - Handle transactional workloads
 
 ---
 
 # ⛰️SedonaDB
 
-<img src="/src/sedona_logo_symbol.png" class="absolute top-8 right-8 h-30 object-contain" />
+<img src="/src/sedona_logo_symbol.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
-- GIS のために設計されたクエリエンジン
-- Python や R から使うのがメイン（CLI もある）
-- Sedona（分散処理エンジン）と同じ API
-  - ローカルでは重すぎる処理はクラウド上にスケールしたりできる
-- ベクターもラスター（開発中）も扱える
-- Wherobots が開発
+- A query engine designed for GIS
+- Primarily used from Python or R (a CLI is also available)
+- Supports both vector and raster data (raster support is under development)
 
 ---
 
-# What is SedonaDB?
+# ⛰️SedonaDB vs Sedona
 
-- Query engine designed for GIS
+<img src="/src/sedona_logo_symbol.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
+
+- **Sedona:** Distributed geospatial processing on Apache Spark
+- **SedonaDB:** The same API, optimized for a single node
+- Prototype locally, then scale in the cloud
 
 ---
 
-# DuckDB
+# Summary
 
 |   | Vector | Raster | w/o server |
 |:--|:------:|:------:|:----------:|
 | PostGIS | ✅ | ✅  |   |
-| DuckDB | ✅ |   | ✅  |
+| DuckDB | ✅ | ⚠️  | ✅  |
 | SedonaDB | ✅ | ✅  | ✅  |
+
+⚠️: community extension
 
 ---
 
-# a
+# Which one should I recommend?
+
+<div class="flex justify-center items-center gap-16 h-4/5 text-8xl">
+<v-clicks>
+    <div class="h-40 w-40">🦆</div>
+</v-clicks>
+</div>
