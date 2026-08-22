@@ -56,7 +56,6 @@
         /* by default, h1 + p is opacity: 0.5, so reset */
         opacity: 1;
     }
-    
 
     h1 {
         @apply text-5xl;

@@ -113,11 +113,52 @@ Hiroaki Yutani
 </small>
 
 ---
+clicks: 1
+---
 
-# Which one should I recommend?
+# So, which DB should I use??
 
-<div class="flex justify-center items-center gap-16 h-4/5 text-8xl">
-<v-clicks>
-    <div class="h-40 w-40">🦆</div>
-</v-clicks>
+<div class="flex justify-center items-center h-4/5">
+  <EmojiRoulette :emojis="['🐘', '🦆', '⛰️']" final="🦆" />
 </div>
+
+---
+
+# DuckDB is a safe bet
+
+- Write once, run anywhere
+  - No server, just download the CLI!
+- `spatial` extension provides most of the vector operations
+- Very performant on Parquet
+
+---
+
+# But...
+
+---
+
+# Overture Maps' official document
+
+![](/src/screenshot1.png)
+
+---
+
+# Overture Maps' official document
+
+![](/src/screenshot2.png)
+
+---
+
+# What's this...?
+
+```sql {7-8}
+...snip...
+ 
+  FROM
+    read_parquet('s3://overturemaps-us-west-2/release/2026-08-19.0/theme=places/type=place/*', filename=true, hive_partitioning=1)
+  WHERE
+    categories.primary = 'pizza_restaurant'
+    AND bbox.xmin BETWEEN -75 AND -73       -- Only use the bbox min values
+    AND bbox.ymin BETWEEN 40 AND 41         -- because they are point geometries.
+) TO 'nyc_pizza.geojson' WITH (FORMAT GDAL, DRIVER 'GeoJSON');
+```
