@@ -67,10 +67,14 @@ layout: two-cols-header
 
 <img src="/src/postgis-logo-horizontal.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
+<v-clicks>
+
 - A PostgreSQL extension
 - Pioneered the `ST_` function.
 - Supports both vector and raster data
 - Requires PostgreSQL server setup
+
+</v-clicks>
 
 ---
 
@@ -78,11 +82,15 @@ layout: two-cols-header
 
 <img src="/src/DuckDB_icon-lightmode.svg" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
+<v-clicks>
+
 - Highly portable
   - Single binary
   - Runs anywhere (older machines, web browsers, Python, R, etc)
 - `spatial` extension provide spatial functions
 - No native raster support (but a community extension is available)
+
+</v-clicks>
 
 ---
 
@@ -90,10 +98,14 @@ layout: two-cols-header
 
 <img src="/src/DuckDB_icon-lightmode.svg" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
+<v-clicks>
+
 - Native `GEOMETRY` type (v1.5🎉)
   - We'll talk about this later!
 - "DuckDB as a server" (v2.0, soon-ish)
   - Handle transactional workloads
+
+</v-clicks>
 
 ---
 
@@ -101,9 +113,13 @@ layout: two-cols-header
 
 <img src="/src/sedona_logo_symbol.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
+<v-clicks>
+
 - A query engine designed for GIS
 - Primarily used from Python or R (a CLI is also available)
 - Supports both vector and raster data (raster support is under development)
+
+</v-clicks>
 
 ---
 
@@ -274,3 +290,10 @@ AND ST_Intersects(
 We need a query engine<br/>designed for GIS big data!
 </div>
 </v-click>
+
+---
+
+# When does it matter?
+
+- Small data is fine.
+- Big data.
