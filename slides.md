@@ -21,7 +21,7 @@ favicon: /favicon.ico
 
 Hiroaki Yutani
 
----
+--- 
 
 # So you want SQL on GIS data?
 
@@ -44,14 +44,31 @@ Hiroaki Yutani
 </div>
 
 ---
+layout: two-cols-header 
+---
+
+# My contributions
+
+::left::
+
+- SedonaDB (#8)
+
+<img src="/src/github1.png" class="h-1/2" />
+
+::right::
+
+- DuckDB spatial (#3)
+
+<img src="/src/github2.png" class="h-1/2" />
+
+---
 
 # 🐘PostGIS
 
 <img src="/src/postgis-logo-horizontal.png" class="float-right -mt-16 ml-8 h-30 object-contain" />
 
 - A PostgreSQL extension
-- Versatile spatial functions!
-  - This is the de facto standard...
+- Pioneered the `ST_` function.
 - Supports both vector and raster data
 - Requires PostgreSQL server setup
 
@@ -204,14 +221,17 @@ AND ST_Intersects(
 
 ---
 
-# SedonaDB can do well
+# SedonaDB can do this
 
-- Even `&&` is not needed!
+- We don't even need `&&`!
 
 ```sql
 AND ST_Intersects(
   geometry,
-  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+  -- ST_MakeEnvelope() is not implemented yet
+  ST_GeomFromWKT(
+    'POLYGON((-75 40, -75 41, -73 41, -73 40, -75 40))'
+  )
 )
 ```
 
@@ -219,14 +239,14 @@ AND ST_Intersects(
 
 # But, why?
 
-- Actually, SedonaDB does the same calculation as `bbox.xmin BETWEEN ...` internally.
+- Actually, SedonaDB does the same calculation as `bbox.xmin BETWEEN ...` internally for pruning.
 - `bbox` column (or `covering` metadata) is defined by the GeoParquet 1.1 specification.
 
 ---
 
 # DuckDB vs SedonaDB
 
-- Do this manually because **DuckDB** doesn't automatucally check `bbox` column!
+- This was just a workaround because **DuckDB** doesn't automatucally check `bbox` column!
 
 ```sql
 AND bbox.xmin BETWEEN -75 AND -73
@@ -237,13 +257,20 @@ AND bbox.ymin BETWEEN 40 AND 41
 ```sql
 AND ST_Intersects(
   geometry,
-  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+  ST_GeomFromWKT('POLYGON((-75 40, -75 41, -73 41, -73 40, -75 40))')
 )
 ```
 
 ---
 
-# DuckDB vs SedonaDB
+# DuckDB is not enough for GIS
 
 - You can do almost everything in DuckDB with extensions.
-- But, extensions **cannot interfere the planner and the optimizer**.
+- But, extensions have **little control over the planner and the optimizer**.
+
+
+<v-click>
+<div class="text-center pt-10 text-red-500 text-5xl">
+We need a query engine<br/>designed for GIS big data!
+</div>
+</v-click>

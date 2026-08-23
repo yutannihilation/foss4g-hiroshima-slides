@@ -12,26 +12,14 @@ const props = withDefaults(defineProps<{
   emojis: () => ['🐘', '🦆', '⛰️'],
   final: '🦆',
   startInterval: 500,
-  minInterval: 100,
+  minInterval: 70,
   acceleration: 0.95,
 })
 
 const { $clicks } = useSlideContext()
 const current = ref(props.final)
 let timeoutId: number | undefined
-let queue: string[] = []
 let isActive = false
-
-function shuffle<T>(items: T[]) {
-  const shuffled = [...items]
-
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-
-  return shuffled
-}
 
 function stop() {
   if (timeoutId !== undefined) {
@@ -42,19 +30,13 @@ function stop() {
 
 function run() {
   stop()
-  queue = []
+  const emojis = props.emojis.length > 0 ? props.emojis : [props.final]
+  let index = 0
   let interval = props.startInterval
 
   function advance() {
-    if (queue.length === 0) {
-      queue = shuffle(props.emojis)
-
-      if (queue.length > 1 && queue[0] === current.value) {
-        ;[queue[0], queue[1]] = [queue[1], queue[0]]
-      }
-    }
-
-    current.value = queue.shift() ?? props.final
+    current.value = emojis[index]
+    index = (index + 1) % emojis.length
     timeoutId = window.setTimeout(advance, interval)
     interval = Math.max(
       props.minInterval,
