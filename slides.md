@@ -63,7 +63,7 @@ Hiroaki Yutani
 
 - Highly portable
   - Single binary
-  - Runs everywhere (older machines, web browsers, Python, R, etc)
+  - Runs anywhere (older machines, web browsers, Python, R, etc)
 - `spatial` extension provide spatial functions
 - No native raster support (but a community extension is available)
 
@@ -199,5 +199,51 @@ AND ST_Intersects(
 
 # Why?
 
-- Overture Maps' GeoParquet does not provide row-group statistics on `GEOMETRY` column yet.
-- 
+- In short, DuckDB can optimize the execution when the necessary statistics is available
+- and it's not the case with Overture Maps' Parquet😢
+
+---
+
+# SedonaDB can do well
+
+- Even `&&` is not needed!
+
+```sql
+AND ST_Intersects(
+  geometry,
+  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+)
+```
+
+---
+
+# But, why?
+
+- Actually, SedonaDB does the same calculation as `bbox.xmin BETWEEN ...` internally.
+- `bbox` column (or `covering` metadata) is defined by the GeoParquet 1.1 specification.
+
+---
+
+# DuckDB vs SedonaDB
+
+- Do this manually because **DuckDB** doesn't automatucally check `bbox` column!
+
+```sql
+AND bbox.xmin BETWEEN -75 AND -73
+AND bbox.ymin BETWEEN 40 AND 41
+```
+
+- On the other hand, **SedonaDB** does!🎉
+```sql
+AND ST_Intersects(
+  geometry,
+  ST_MakeEnvelope(-75, 40, -73, 41, 4326)
+)
+```
+
+---
+
+# DuckDB vs SedonaDB
+
+- You can do almost everything in DuckDB with extensions.
+- But, extensions **cannot interfere the planner and the optimizer**.
