@@ -56,4 +56,10 @@ This is a bit complicated issue, but, in short, it is that DuckDB can optimize t
 
 On the other hand, SedonaDB can do! It doesn't even need the double ampersand. We can just use `ST_Intersects()`, then SedonaDB can take care of the rest.
 
-But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. `bbox` column, or `convering` metadata is defined by GeoParquet 1.1 specification.
+But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. `bbox` column, or `convering` metadata is defined by GeoParquet 1.1 specification. The `covering` metadata refers to a column name that contains the bounding box information, and the column is `bbox` in this specific case.
+
+So, this bbox condition was just a workaround because DuckDB doesn't automatically check `bbox` column! On the other hand, SedonaDB knows this.
+
+To be clear, this should be just a temporary problem until the new version of the GeoParquet specification. Once it's standardized, Overture Maps can provide the data with row group statistics. Then, DuckDB should have no problem with utilizing it for filter pruning.
+
+But, what I would emphasize is, there are cases when the engine itself needs to be aware of the data format designed for geospatial.
