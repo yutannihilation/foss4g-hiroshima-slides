@@ -162,6 +162,7 @@ clicks: 1
 - Write once, run anywhere
   - No server, just download the CLI!
 - `spatial` extension provides most of the vector operations
+- Can read what GDAL can read
 - Very performant on Parquet
 
 ---
