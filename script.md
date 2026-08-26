@@ -59,6 +59,8 @@ This is a bit complicated issue, but, in short, it is that DuckDB can optimize t
 
 On the other hand, SedonaDB can handle this nicely! We don't even need to write the double ampersand condition. We can just use `ST_Intersects()`, then SedonaDB can take care of the rest.
 
+You can also use the data frame API instead of SQL.
+
 But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. `bbox` column, or `convering` metadata is defined by GeoParquet 1.1 specification. The `covering` metadata refers to a column name that contains the bounding box information, and the column is `bbox` in this specific case.
 
 So, this bbox condition was just a workaround. Since DuckDB doesn't automatically check `bbox` column, we need to check by ourselves! On the other hand, SedonaDB knows what to do.
