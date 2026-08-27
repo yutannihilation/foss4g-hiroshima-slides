@@ -65,7 +65,7 @@ layout: two-cols-header
 <v-clicks>
 
 - A PostgreSQL extension
-- Pioneered the `ST_` function.
+- Pioneered the `ST_` functions.
 - Supports both vector and raster data
 - Requires PostgreSQL server setup
 
@@ -82,7 +82,7 @@ layout: two-cols-header
 - Highly portable
   - Single binary
   - Runs anywhere (older machines, web browsers, Python, R, etc)
-- `spatial` extension provide spatial functions
+- `spatial` extension provides spatial functions
 - No native raster support (but a community extension is available)
 
 </v-clicks>
@@ -228,8 +228,8 @@ AND ST_Intersects(
 
 # Why?
 
-- In short, DuckDB can optimize the execution only when the necessary statistics is available
-- and it's not the case with Overture Maps' Parquet😢
+- In short, DuckDB can optimize the execution only when the necessary statistics are available
+- and that is not the case with Overture Maps' Parquet😢
 
 ---
 
@@ -252,7 +252,7 @@ AND ST_Intersects(
 # But, why?
 
 - Actually, SedonaDB does the same calculation as `bbox.xmin BETWEEN ...` internally for pruning.
-- `bbox` column (or `covering` metadata) is defined by the GeoParquet 1.1 specification.
+- The `bbox` column (or `covering` metadata) is defined by the GeoParquet 1.1 specification.
 
 ---
 layout: full
@@ -306,7 +306,7 @@ layout: full
 
 # DuckDB vs SedonaDB
 
-- This was just a workaround because **DuckDB** doesn't automatucally check `bbox` column!
+- This was just a workaround because **DuckDB** doesn't automatically check the `bbox` column!
 
 ```sql
 AND bbox.xmin BETWEEN -75 AND -73
@@ -342,5 +342,5 @@ We need a query engine<br/>designed for GIS big data!
 (Honestly, this is beyond my knowledge...)
 
 - Small data is usually fine.
-- When filtering a big GIS data
-- When joining multiple big GIS data
+- When filtering a large GIS dataset
+- When joining multiple large GIS datasets
