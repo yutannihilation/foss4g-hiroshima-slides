@@ -90,3 +90,7 @@ But, what I would emphasize is, sometimes there are cases like this when the eng
 Extensions are powerful, but they don't help much here. They have little control over the planner and the optimizer because this usually happens before the extension reads and processes the data. Again, the engine itself needs to address the geospatial things.
 
 That's why we need a query engine designed for GIS big data.
+
+To be honest, this is beyond my knowledge, and small data is usually fine. But I think this matters when filtering a large GIS dataset or joining multiple large GIS datasets. Spatial joins are especially challenging because they need to compare two large sets of geometries. SedonaDB is working on this problem at the engine level. Version 0.3 introduced out-of-core spatial joins, which can process data larger than memory. Version 0.4 added GPU-accelerated spatial joins. I think these are good examples of why a query engine designed for GIS can make a difference.
+
+So, let me come back to the question in the title. Why do we need yet another geospatial database engine? DuckDB is still a safe bet for most GIS workloads, and extensions can provide almost all the spatial functions we need. But extensions have limited control over query planning and optimization. For GIS big data, the engine itself needs to understand geospatial data. That is why we need SedonaDB.

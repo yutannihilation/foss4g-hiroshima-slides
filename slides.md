@@ -336,11 +336,45 @@ We need a query engine<br/>designed for GIS big data!
 </v-click>
 
 ---
+layout: two-cols-header
+---
 
 # When does it matter?
+
+::left::
 
 (Honestly, this is beyond my knowledge...)
 
 - Small data is usually fine.
 - When filtering a large GIS dataset
 - When joining multiple large GIS datasets
+
+::right::
+
+<v-click>
+
+### SedonaDB's approach to spatial joins
+
+- **Out-of-core** spatial joins (v0.3)
+- **GPU-accelerated** spatial joins (v0.4)
+
+</v-click>
+
+---
+
+# Why Yet Another Geospatial Database Engine?
+
+<v-clicks>
+
+- **DuckDB is a safe bet** for most GIS workloads.
+- Extensions can provide almost all the spatial functions we need.
+- But they have **limited control over query planning and optimization**.
+- For GIS big data, the **engine itself needs to understand geospatial data**.
+
+</v-clicks>
+
+<v-click>
+<div class="text-center pt-8 text-4xl text-red-500">
+That is why we need SedonaDB.
+</div>
+</v-click>
