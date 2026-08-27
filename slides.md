@@ -339,5 +339,8 @@ We need a query engine<br/>designed for GIS big data!
 
 # When does it matter?
 
-- Small data is fine.
-- Big data.
+(Honestly, this is beyond my knowledge...)
+
+- Small data is usually fine.
+- When filtering a big GIS data
+- When joining multiple big GIS data

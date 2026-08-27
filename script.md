@@ -81,10 +81,12 @@ Here's the trick. We can add a column that provides the statistics for the geome
 
 Yes, this is the bbox column. I'm not sure if this is the original intension of the bbox column, but it seems people find the metadata useful instead of the content.
 
-That was what was happening in DuckDB's case. This bbox condition was just a workaround. Since DuckDB doesn't automatically check `bbox` column, we need to check it by ourselves! On the other hand, SedonaDB knows what to do.
+So, now we can understand what was happening in DuckDB's case. This bbox condition was just a workaround. Since DuckDB doesn't automatically check `bbox` column, we need to check it manually! On the other hand, SedonaDB knows what to do with it.
 
-To be clear, this should be just a temporary problem until the new version of the GeoParquet specification. Once it's standardized, Overture Maps can adopt it and provide the data with row group statistics. Then, DuckDB should have no problem with utilizing it for filter pruning.
+To be clear, this should be just a temporary problem until the new version, 2.0, of the GeoParquet specification. Once it's standardized, Overture Maps can adopt it and provide the data with row group statistics. Then, DuckDB should have no problem with utilizing it for filter pruning.
 
-But, what I would emphasize is, there are such cases when the engine itself needs to be aware of the data format, needs to know the geospatial things.
+But, what I would emphasize is, sometimes there are cases like this when the engine itself needs to be aware of the data format, needs to know the geospatial things.
 
-Extensions are powerful, but they have little control over the planner and the optimizer because it usually happens before the extension read and process the data.
+Extensions are powerful, but they doesn't help much here. They have little control over the planner and the optimizer because it usually happens before the extension read and process the data. Again, the engine itself needs to address the geospatial things.
+
+That's why we need a query engine designed for GIS big data.
