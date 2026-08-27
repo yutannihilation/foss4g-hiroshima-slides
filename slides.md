@@ -228,7 +228,7 @@ AND ST_Intersects(
 
 # Why?
 
-- In short, DuckDB can optimize the execution when the necessary statistics is available
+- In short, DuckDB can optimize the execution only when the necessary statistics is available
 - and it's not the case with Overture Maps' Parquet😢
 
 ---
@@ -253,6 +253,54 @@ AND ST_Intersects(
 
 - Actually, SedonaDB does the same calculation as `bbox.xmin BETWEEN ...` internally for pruning.
 - `bbox` column (or `covering` metadata) is defined by the GeoParquet 1.1 specification.
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet0.png" class="h-full"/>
+</div>
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet1.png" class="h-full"/>
+</div>
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet2.png" class="h-full"/>
+</div>
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet3.png" class="h-full"/>
+</div>
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet4.png" class="h-full"/>
+</div>
+
+---
+layout: full
+---
+
+<div class="flex justify-center items-center h-full">
+    <img src="/src/parquet5.png" class="h-full"/>
+</div>
 
 ---
 

@@ -63,7 +63,25 @@ You can also use the data frame API instead of SQL.
 
 But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. `bbox` column, or `convering` metadata is defined by GeoParquet 1.1 specification. The `covering` metadata refers to a column name that contains the bounding box information, and the column is `bbox` in this specific case.
 
-So, this bbox condition was just a workaround. Since DuckDB doesn't automatically check `bbox` column, we need to check by ourselves! On the other hand, SedonaDB knows what to do.
+This is very tricky so I'm not sure if I can explain this well, but let me try anyway...!
+
+In a Parquet file, the table data is split into many chunk called "row group."
+
+Each row group has some metadata, including the statistics of each column about the values in the chunk. For example, the maximum value and the minimum value. So, if a database engine is smart enough, it can use the statistics to determine if the chunk is worth reading.
+
+To be clear, this figure just shows the concept and doesn't reflect the actual data layout. In actual, the metadata section is located at the end of the file.
+
+Anyway, this is how filter pruning works.
+
+However, the GEOMETRY type in GeoParquet v1.1 doesn't provide the statistics. This is because, from the viewpoint of the Parquet specification, this GEOMETRY is just an opaque binary.
+
+So, we are in trouble. If the statistics is not available, the engine cannot perform filter pruning. What should we do?
+
+Here's the trick. We can add a column that provides the statistics for the geometry column. We are not interested in the contents of the column. Only the statistics is used.
+
+Yes, this is the bbox column. I'm not sure if this is the original intension of the bbox column, but it seems people find the metadata useful instead of the content.
+
+That was what was happening in DuckDB's case. This bbox condition was just a workaround. Since DuckDB doesn't automatically check `bbox` column, we need to check it by ourselves! On the other hand, SedonaDB knows what to do.
 
 To be clear, this should be just a temporary problem until the new version of the GeoParquet specification. Once it's standardized, Overture Maps can adopt it and provide the data with row group statistics. Then, DuckDB should have no problem with utilizing it for filter pruning.
 
