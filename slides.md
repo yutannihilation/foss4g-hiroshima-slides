@@ -357,6 +357,8 @@ layout: two-cols-header
 
 - **Out-of-core** spatial joins (v0.3)
 - **GPU-accelerated** spatial joins (v0.4)
+- **Raster–vector** spatial joins in the engine (v0.4.1)
+  - Hard in DuckDB: raster lives in a community extension
 
 </v-click>
 
