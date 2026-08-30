@@ -2,7 +2,7 @@ Hi, I'm Hiroaki Yutani. I'm a software engineer at MIERUNE, Inc. MIERUNE is a GI
 
 Today, I'll talk about an elephant, a duck, and a mountain. Or, more precisely, these three GIS databases: PostGIS, DuckDB, and SedonaDB.
 
-Let me talk a bit about the background. I've been contributing to SedonaDB, but I'm also a contributor to the DuckDB spatial extension. I'm the eighth contributor in SedonaDB's repo, and the third in DuckDB's repo. But, while contributing to multiple projects, I myself was wondering if it's really meaningful to have multiple geospatial databases. Isn't it enough to have the most popular one? Why do we need yet another geospatial database engine? This is the question I've been thinking about for a year. Honestly, I don't have a clear answer yet, but let me share my thoughts.
+Let me talk a bit about the background. I've been contributing to SedonaDB, but I'm also a contributor to the DuckDB spatial extension. I'm the eighth contributor in SedonaDB's repo, and the third in DuckDB's repo. But, while contributing to multiple projects, I myself was wondering if it's really meaningful to have multiple geospatial databases. Isn't it enough to have the most powerful one? Why do we need yet another geospatial database engine? This is the question I've been thinking about for a year. Honestly, I don't have a clear answer yet, but let me share my thoughts.
 
 Okay, let's start with brief introductions to the three databases I showed.
 
@@ -26,7 +26,7 @@ SedonaDB supports both vector and raster, although raster support is under devel
 
 Before SedonaDB, there was already Sedona, a distributed geospatial processing system on Apache Spark. SedonaDB is developed as a single-node version of Sedona, so that we can get familiar with the API. Having the same API means we can prototype locally and then scale in the cloud.
 
-So, here's the short summary. They all have support for raster data, but DuckDB's raster support is not integrated with the core. DuckDB and SedonaDB can run without setting up a server. If we want a server, in other words, for transactional workloads, PostGIS is a great choice.
+So, here's the short summary. They all have support for raster data, but DuckDB's raster support is not integrated with the core. DuckDB and SedonaDB can run without setting up a server. If we want a server, in other words, for transactional workloads, PostGIS is a great choice. But, DuckDB 2.0 might be a game changer!
 
 So, which one should I choose? I would recommend... DuckDB!
 
@@ -38,7 +38,7 @@ Internally, it uses GDAL. So, it can read any data format that GDAL can read.
 
 Needless to say, DuckDB delivers excellent performance, especially with Parquet files.
 
-But..., DuckDB is not almighty. Let me share one minor problem, which is too complex for me to understand.
+But..., DuckDB is not almighty. Let me share one minor problem, which was too tricky for me to understand.
 
 Do you know Overture Maps? It's a collaborative project that provides free and open map data for the entire world. It combines data from multiple sources and includes buildings, places, addresses, transportation networks, and more.
 The official Overture Maps documentation shows how to access the data using DuckDB. Here's the SQL query.
@@ -51,9 +51,9 @@ So, why does the DuckDB SQL look very different? Can't we do the same thing?
 
 Good news! As I mentioned on the previous slide, DuckDB version 1.5 acquired the functionality! Now that the `GEOMETRY` type is native in DuckDB, DuckDB can do filter pruning more efficiently.
 
-We can use `&&` in the same way as PostGIS. Internally, it is an alias to `ST_Intersects_Extent()`, which is a lightweight version of `ST_Intersects()`. By using this, theoretically, we should be able to replace the `bbox` condition with double ampersand.
+We can use `&&` in the same way as PostGIS. Internally, it is an alias to function `ST_Intersects_Extent()`, which is a lightweight version of `ST_Intersects()`. By using this, theoretically, we should be able to replace the `bbox` condition with double ampersand.
 
-But, here's the bad news. It doesn't work. If we remove the `bbox` condition, DuckDB scans the full data. No filter pruning happens here.
+But, here's a bad news. It doesn't work. If we remove the `bbox` condition, DuckDB scans the full data. No filter pruning happens here.
 
 This is a bit of a complicated issue, but, in short, DuckDB can optimize the execution only when the necessary statistics are available, and Overture Maps' Parquet files don't provide the statistics.
 
@@ -61,7 +61,7 @@ On the other hand, SedonaDB can handle this nicely! We don't even need to write 
 
 You can also use the data frame API instead of SQL.
 
-But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. The `bbox` column, or `covering` metadata, is defined by the GeoParquet 1.1 specification. The `covering` metadata refers to a column name that contains the bounding box information, and the column is `bbox` in this specific case.
+But, why does SedonaDB work while DuckDB fails? Actually, SedonaDB does the same calculation as the `bbox` condition internally. The `bbox` column, or `covering` metadata, is defined by the GeoParquet 1.1 specification. The `covering` metadata refers to a column name that contains the bounding box information, and the column name is `bbox` in this specific case.
 
 This is very tricky so I'm not sure if I can explain this well, but let me try anyway...!
 
@@ -91,6 +91,8 @@ Extensions are powerful, but they don't help much here. They have little control
 
 That's why we need a query engine designed for GIS big data.
 
-To be honest, this is beyond my knowledge, and small data is usually fine. But I think this matters when filtering a large GIS dataset or joining multiple large GIS datasets. Spatial joins are especially challenging because they need to compare two large sets of geometries. SedonaDB is working on this problem at the engine level. Version 0.3 introduced out-of-core spatial joins, which can process data larger than memory. Version 0.4 added GPU-accelerated spatial joins. Version 0.4.1 added index-optimized raster–vector spatial joins for `RS_Intersects`, `RS_Contains`, and `RS_Within`. This is another good example of why engine-level support matters. DuckDB's raster support is provided by a community extension and is not integrated into the core, so it is difficult for the engine to understand and optimize a join between vector and raster data. In SedonaDB, both vector and raster are part of the same query engine, so the engine can optimize the join directly. The feature is still new, and some difficult cross-CRS cases are being discussed, but I think these are good examples of why a query engine designed for GIS can make a difference.
+To be honest, this is beyond my knowledge, and small data is usually fine. But I think this matters when filtering a large GIS dataset or joining multiple large GIS datasets. Spatial joins are especially challenging because they need to compare two large sets of geometries.
+
+SedonaDB is working on this problem at the engine level. Version 0.3 introduced out-of-core spatial joins, which can process data larger than memory. Version 0.4 added GPU-accelerated spatial joins. Version 0.4.1 added index-optimized raster–vector spatial joins for `RS_Intersects`, `RS_Contains`, and `RS_Within`. This is another good example of why engine-level support matters. DuckDB's raster support is provided by a community extension and is not integrated into the core, so it is difficult for the engine to understand and optimize a join between vector and raster data. In SedonaDB, both vector and raster are part of the same query engine, so the engine can optimize the join directly. The feature is still new, and some difficult cross-CRS cases are being discussed, but I think these are good examples of why a query engine designed for GIS can make a difference.
 
 So, let me come back to the question in the title. Why do we need yet another geospatial database engine? DuckDB is still a safe bet for most GIS workloads, and extensions can provide almost all the spatial functions we need. But extensions have limited control over query planning and optimization. For GIS big data, the engine itself needs to understand geospatial data. That is why we need SedonaDB.

@@ -306,7 +306,7 @@ layout: full
 
 # DuckDB vs SedonaDB
 
-- This was just a workaround because **DuckDB** doesn't automatically check the `bbox` column!
+- This was just a workaround because **DuckDB** doesn't automatically care `bbox`!
 
 ```sql
 AND bbox.xmin BETWEEN -75 AND -73
@@ -336,12 +336,8 @@ We need a query engine<br/>designed for GIS big data!
 </v-click>
 
 ---
-layout: two-cols-header
----
 
 # When does it matter?
-
-::left::
 
 (Honestly, this is beyond my knowledge...)
 
@@ -349,18 +345,14 @@ layout: two-cols-header
 - When filtering a large GIS dataset
 - When joining multiple large GIS datasets
 
-::right::
+---
 
-<v-click>
-
-### SedonaDB's approach to spatial joins
+# SedonaDB's approach to spatial joins
 
 - **Out-of-core** spatial joins (v0.3)
 - **GPU-accelerated** spatial joins (v0.4)
 - **Raster–vector** spatial joins in the engine (v0.4.1)
   - Hard in DuckDB: raster lives in a community extension
-
-</v-click>
 
 ---
 
