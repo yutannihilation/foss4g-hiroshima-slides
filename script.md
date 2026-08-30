@@ -1,12 +1,12 @@
-Hi, I'm Hiroaki Yutani. I'm a software engineer at MIERUNE, Inc. MIERUNE is a GIS company in the northern part of Japan.
+Hi, I'm Hiroaki Yutani. I'm a software engineer at MIERUNE, Inc. MIERUNE is a GIS company in northern Japan.
 
 Today, I'll talk about an elephant, a duck, and a mountain. Or, more precisely, these three GIS databases: PostGIS, DuckDB, and SedonaDB.
 
-Let me talk a bit about the background. I've been contributing to SedonaDB, but I'm also a contributor to the DuckDB spatial extension. I'm the eighth contributor in SedonaDB's repo, and the third in DuckDB's repo. But, while contributing to multiple projects, I myself was wondering if it's really meaningful to have multiple geospatial databases. Isn't it enough to have the most powerful one? Why do we need yet another geospatial database engine? This is the question I've been thinking about for a year. Honestly, I don't have a clear answer yet, but let me share my thoughts.
+Let me talk a bit about the background. I've been contributing to SedonaDB, but I'm also a contributor to the DuckDB spatial extension. I'm the eighth contributor to SedonaDB's repo, and the third to DuckDB's repo. But, while contributing to multiple projects, I myself was wondering if it's really meaningful to have multiple geospatial databases. Isn't it enough to have the most powerful one? Why do we need yet another geospatial database engine? This is the question I've been thinking about for a year. Honestly, I don't have a clear answer yet, but let me share my thoughts.
 
 Okay, let's start with brief introductions to the three databases I showed.
 
-First, PostGIS. PostGIS is a PostgreSQL extension. Since PostGIS is the pioneer of the `ST_` functions, it provides more versatile functions than the others. PostGIS is the standard for SQL on GIS data. It can handle both vector and raster.
+First, PostGIS. PostGIS is a PostgreSQL extension. Since PostGIS is the pioneer of the `ST_` functions, it provides a wider range of functions than the others. PostGIS is the standard for SQL on GIS data. It can handle both vector and raster.
 
 The downside is that we need to set up a server before doing anything. While having a server is a good thing for transactional workloads, PostGIS is not as lightweight as DuckDB and SedonaDB. In addition, we need to import the data into the server. If the data is small enough, it's not a problem, but it's impossible if the data is larger than the available disk space.
 
@@ -24,7 +24,7 @@ Last one, SedonaDB. How many of you know SedonaDB already? SedonaDB is a query e
 
 SedonaDB supports both vector and raster, although raster support is under development!
 
-Before SedonaDB, there was already Sedona, a distributed geospatial processing system on Apache Spark. SedonaDB is developed as a single-node version of Sedona, so that we can get familiar with the API. Having the same API means we can prototype locally and then scale in the cloud.
+Before SedonaDB, there was already Sedona, a distributed geospatial processing system on Apache Spark. SedonaDB was developed as a single-node version of Sedona, so that we can get familiar with Sedona's API. Having the same API means we can prototype locally and then scale in the cloud.
 
 So, here's the short summary. They all have support for raster data, but DuckDB's raster support is not integrated with the core. DuckDB and SedonaDB can run without setting up a server. If we want a server, in other words, for transactional workloads, PostGIS is a great choice. But, DuckDB 2.0 might be a game changer!
 
@@ -38,22 +38,22 @@ Internally, it uses GDAL. So, it can read any data format that GDAL can read.
 
 Needless to say, DuckDB delivers excellent performance, especially with Parquet files.
 
-But..., DuckDB is not almighty. Let me share one minor problem, which was too tricky for me to understand.
+But..., DuckDB is not perfect. Let me share one minor problem, which was quite tricky to understand.
 
 Do you know Overture Maps? It's a collaborative project that provides free and open map data for the entire world. It combines data from multiple sources and includes buildings, places, addresses, transportation networks, and more.
 The official Overture Maps documentation shows how to access the data using DuckDB. Here's the SQL query.
 
-In this SQL, have you ever seen such conditions? What's this `bbox` column?
+In this SQL, have you ever seen conditions like these? What's this `bbox` column?
 
-If you are familiar with PostGIS, you would expect a condition on the `geometry` column like this. `&&` (double ampersand) is the trick to use the spatial index. By putting this before the actual `ST_Intersects()` condition, we can speed up the query by pruning the features that are apparently outside the area of interest.
+If you are familiar with PostGIS, you would expect a condition on the `geometry` column like this. `&&` (double ampersand) is the trick to use the spatial index. By putting this before the actual `ST_Intersects()` condition, we can speed up the query by pruning the features that are clearly outside the area of interest.
 
-So, why does the DuckDB SQL look very different? Can't we do the same thing? 
+So, why does the DuckDB SQL look so different? Can't we do the same thing? 
 
-Good news! As I mentioned on the previous slide, DuckDB version 1.5 acquired the functionality! Now that the `GEOMETRY` type is native in DuckDB, DuckDB can do filter pruning more efficiently.
+Good news! As I mentioned on the previous slide, DuckDB version 1.5 got this feature! Now that the `GEOMETRY` type is native in DuckDB, DuckDB can do filter pruning more efficiently.
 
-We can use `&&` in the same way as PostGIS. Internally, it is an alias to function `ST_Intersects_Extent()`, which is a lightweight version of `ST_Intersects()`. By using this, theoretically, we should be able to replace the `bbox` condition with double ampersand.
+We can use `&&` in the same way as PostGIS. Internally, it is an alias for `ST_Intersects_Extent()`, which is a lightweight version of `ST_Intersects()`. By using this, theoretically, we should be able to replace the `bbox` condition with double ampersand.
 
-But, here's a bad news. It doesn't work. If we remove the `bbox` condition, DuckDB scans the full data. No filter pruning happens here.
+But, here's the bad news. It doesn't work. If we remove the `bbox` condition, DuckDB does a full scan of the data. No filter pruning happens here.
 
 This is a bit of a complicated issue, but, in short, DuckDB can optimize the execution only when the necessary statistics are available, and Overture Maps' Parquet files don't provide the statistics.
 
@@ -79,15 +79,15 @@ So, we are in trouble. If the statistics are not available, the engine cannot pe
 
 Here's the trick. We can add a column that provides the statistics for the geometry column. We are not interested in the contents of the column. Only the statistics are used.
 
-Yes, this is the bbox column. I'm not sure if this is the original intention of the bbox column, but it seems people find the metadata useful instead of the content.
+Yes, this is the bbox column. I'm not sure if this is the original intention of the bbox column, but it seems people find the metadata useful, rather than the content.
 
 So, now we can understand what was happening in DuckDB's case. This bbox condition was just a workaround. Since DuckDB doesn't automatically check the `bbox` column, we need to check it manually! On the other hand, SedonaDB knows what to do with it.
 
-To be clear, this should be just a temporary problem until the new version, 2.0, of the GeoParquet specification. Once it's standardized, Overture Maps can adopt it and provide the data with row group statistics. Then, DuckDB should have no problem with utilizing it for filter pruning.
+To be clear, this should be just a temporary problem until the new version, 2.0, of the GeoParquet specification. Once it's standardized, Overture Maps can adopt it and provide the data with row group statistics. Then, DuckDB should have no problem using it for filter pruning.
 
-But, what I would emphasize is, sometimes there are cases like this when the engine itself needs to be aware of the data format, needs to know the geospatial things.
+But, what I would emphasize is, sometimes there are cases like this when the engine itself needs to be aware of the data format, needs to know the concepts and rules specific to geospatial data.
 
-Extensions are powerful, but they don't help much here. They have little control over the planner and the optimizer because this usually happens before the extension reads and processes the data. Again, the engine itself needs to address the geospatial things.
+Extensions are powerful, but they don't help much here. They have little control over the planner and the optimizer because this usually happens before the extension reads and processes the data. Again, the engine itself needs to handle these geospatial-specific concepts and rules.
 
 That's why we need a query engine designed for GIS big data.
 

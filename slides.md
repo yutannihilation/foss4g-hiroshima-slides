@@ -212,8 +212,8 @@ AND ST_Intersects(
 # Good news
 
 - As of DuckDB v1.5, `&&` does filter pruning!
-  - `&&` is an alias to `ST_Intersects_Extent()`
-- So, we can use `&&` instead of the conditions on `bbox` column, in theory...?
+  - `&&` is an alias for `ST_Intersects_Extent()`
+- So, we can use `&&` instead of the conditions on the `bbox` column, in theory...?
 
 
 ---
@@ -306,7 +306,7 @@ layout: full
 
 # DuckDB vs SedonaDB
 
-- This was just a workaround because **DuckDB** doesn't automatically care `bbox`!
+- This was just a workaround because **DuckDB** doesn't automatically use `bbox`!
 
 ```sql
 AND bbox.xmin BETWEEN -75 AND -73
