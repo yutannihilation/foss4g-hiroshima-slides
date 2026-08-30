@@ -9,6 +9,9 @@
         "@slidev/theme-default": "latest",
         "vue": "^3.5.35",
       },
+      "devDependencies": {
+        "playwright-chromium": "^1.62.1",
+      },
     },
   },
   "packages": {
@@ -1033,6 +1036,10 @@
     "pkg-types": ["pkg-types@2.3.1", "", { "dependencies": { "confbox": "^0.2.4", "exsolve": "^1.0.8", "pathe": "^2.0.3" } }, "sha512-y+ichcgc2LrADuhLNAx8DFjVfgz91pRxfZdI3UDhxHvcVEZsenLO+7XaU5vOp0u/7V/wZ+plyuQxtrDlZJ+yeg=="],
 
     "plantuml-encoder": ["plantuml-encoder@1.4.0", "", {}, "sha512-sxMwpDw/ySY1WB2CE3+IdMuEcWibJ72DDOsXLkSmEaSzwEUaYBT6DWgOfBiHGCux4q433X6+OEFWjlVqp7gL6g=="],
+
+    "playwright-chromium": ["playwright-chromium@1.62.1", "", { "dependencies": { "playwright-core": "1.62.1" }, "bin": { "playwright": "cli.js" } }, "sha512-yRMzeViD44qD1ZVMNupp82NJQNjumZ02W5r7+DmtD5+7aP9+v66a0PsAk63ewpVDH1GxMf/J/mO+TS1sTaK29w=="],
+
+    "playwright-core": ["playwright-core@1.62.1", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-wPYSwEBJY9GHraISXqyqtx0na0LpO3XEX7jNDhntbex7tzUS7kLnZsOlFruFJB4Hi/rhDMjXGqHewDZ68nYZVw=="],
 
     "points-on-curve": ["points-on-curve@0.2.0", "", {}, "sha512-0mYKnYYe9ZcqMCWhUjItv/oHjvgEsfKvnUTg8sAtnHr3GVy7rGkXCb6d5cSyqrWqL4k81b9CPg3urd+T7aop3A=="],
 
