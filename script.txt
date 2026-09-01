@@ -44,6 +44,8 @@ SedonaDB supports both vector and raster, although raster support is under devel
 
 Before SedonaDB, there was already Sedona, a distributed geospatial processing system on Apache Spark. SedonaDB was developed as a single-node version of Sedona, so that we can get familiar with Sedona's API. Having the same API means we can prototype locally and then scale in the cloud.
 
+Of course, this doesn't mean SedonaDB is just a toy version of Sedona. It's a serious query engine on its own, fast enough for real single-node workloads.
+
 ---
 
 So, here's the short summary. They all have support for raster data, but DuckDB's raster support is not integrated with the core. DuckDB and SedonaDB can run without setting up a server. If we want a server, in other words, for transactional workloads, PostGIS is a great choice. But, DuckDB 2.0 might be a game changer!
