@@ -1,12 +1,10 @@
-# 自分で使う用の Slidev テンプレート
+# SedonaDB: Why Yet Another Geospatial Database Engine?
 
-このままでは GitHub Pages にデプロイされないので以下の手順が必要。
+@ FOSS4G Hiroshima
 
-- Settings > Pages > Build and deployment の「Source」を GitHub Actions に
-- `bun install` を実行して、生成された `bun.lock` をコミットしてプッシュ
+<https://talks.osgeo.org/foss4g-2026/talk/KPBRS7/>
 
-## フォント
+## Font
 
-`fonts/` に [Nebula Sans](https://nebulasans.com/) (Semibold / Black) を同梱している。
-Copyright (c) 2024, Nebula Entertainment & Broadcasting LLC, with Reserved Font Name 'Nebula'.
-SIL Open Font License 1.1 のもとで配布されており、ライセンス全文は [fonts/OFL.txt](fonts/OFL.txt) を参照。
+[Nebula Sans](https://nebulasans.com/) - Copyright (c) 2024, Nebula Entertainment & Broadcasting LLC, with Reserved Font Name 'Nebula'.
+Distributed under the SIL Open Font License 1.1; see [fonts/OFL.txt](fonts/OFL.txt) for the full license text.
